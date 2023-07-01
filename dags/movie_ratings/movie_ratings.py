@@ -7,7 +7,7 @@ from astronomer.providers.apache.livy.operators.livy import LivyOperatorAsync
 from airflow import DAG
 
 DAG_DEFAULT_ARGS = {
-    "owner": "Guido Kosloff Gancedo",
+    "owner": "Kohinoor Biswas",
     "depends_on_past": False,
     "email_on_failure": False,
     "email_on_retry": False,
