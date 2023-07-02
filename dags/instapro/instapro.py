@@ -40,7 +40,7 @@ for i, image in enumerate(images, 1):
         name=f"run-docker-pod-{i}",
         namespace="airflow",
         image=image["image"],
-        image_pull_policy="IfNotPresent",
+        image_pull_policy="Always",
         cmds=image["command"],
         get_logs=True,
         is_delete_operator_pod=True,
