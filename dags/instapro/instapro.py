@@ -4,11 +4,6 @@ from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 import yaml
 
-def get_chart_path(chart_name):
-    with open('values.yaml', 'r') as f:
-        values = yaml.safe_load(f)
-        chart_path = values.get('charts', {}).get(chart_name, {}).get('path')
-        return chart_path
 
 with DAG(
     dag_id="instapro",
@@ -27,7 +22,7 @@ with DAG(
         task_id='execute_helm_chart1',
         namespace='default',
         image='helm:latest',
-        cmds=['helm', 'install', 'instapro-data-loader', get_chart_path('chart1')],
+        cmds=['helm', 'install', 'instapro-data-loader', '~/instapro/charts/instapro-data-loader/instapro-data-loader-0.1.0.tgz'],
         dag=dag,
     )
 
@@ -36,7 +31,7 @@ with DAG(
         task_id='execute_helm_chart2',
         namespace='default',
         image='helm:latest',
-        cmds=['helm', 'install', 'instapro-data-modeller', get_chart_path('chart2')],
+        cmds=['helm', 'install', 'instapro-data-modeller', '~/instapro/charts/instapro-data-modeller/instapro-data-modeller-0.1.0.tgz'],
         dag=dag,
     )
 
@@ -45,7 +40,7 @@ with DAG(
         task_id='execute_helm_chart3',
         namespace='default',
         image='helm:latest',
-        cmds=['helm', 'install', 'instapro-data-tranformer', get_chart_path('chart3')],
+        cmds=['helm', 'install', 'instapro-data-tranformer', '~/instapro/charts/instapro-data-transformer/instapro-data-transformer-0.1.0.tgz'],
         dag=dag,
     )
 
