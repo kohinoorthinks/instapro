@@ -32,7 +32,7 @@ images = [
     },
 ]
 
-tasks = []
+prev_task = None
 for i, image in enumerate(images, 1):
     task = KubernetesPodOperator(
         task_id=f"run_docker_{i}",
@@ -41,12 +41,12 @@ for i, image in enumerate(images, 1):
         image=image["image"],
         image_pull_policy="IfNotPresent",
         cmds=image["command"],
+        get_logs=True,
         dag=dag,
     )
-    tasks.append(task)
 
-# Set the task dependencies
-for i in range(1, len(tasks)):
-    tasks[i].set_upstream(tasks[i-1])
+    if prev_task:
+        task.set_upstream(prev_task)
+    prev_task = task
 
-tasks
+task
