@@ -22,9 +22,9 @@ with DAG(
     catchup=False,
 ) as dag:
     docker_images = [
-        "username/my-image1:latest",
-        "username/my-image2:latest",
-        "username/my-image3:latest",
+        "kohinoorthinks/instapro-data-loader:latest",
+        "kohinoorthinks/instapro-data-modeller:latest",
+        "kohinoorthinks/instapro-data-transformer:latest",
     ]
 
     for i, image in enumerate(docker_images, 1):
@@ -37,7 +37,7 @@ with DAG(
             cmds=['docker', 'pull', image],
             name='airflow-install-docker',
             in_cluster=False,
-            cluster_context='microk8s',
+            cluster_context='kubectl',
             config_file='/usr/local/airflow/include/.kube/config',
             is_delete_operator_pod=True,
             get_logs=True,
