@@ -5,9 +5,9 @@ from airflow.operators.empty import EmptyOperator
 from airflow import DAG
 
 with DAG(
-    dag_id="dummy",
+    dag_id="instapro",
     default_args={
-        "owner": "Guido Kosloff Gancedo",
+        "owner": "Kohinoor Biswas",
         "depends_on_past": False,
         "email_on_failure": False,
         "email_on_retry": False,
@@ -21,3 +21,4 @@ with DAG(
     end = EmptyOperator(task_id="end")
 
     start >> end
+
