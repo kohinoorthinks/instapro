@@ -19,7 +19,7 @@ with DAG(
         task_id='execute_helm_chart1',
         namespace='airflow',  # Specify the namespace as "airflow"
         image='helm:latest',
-        cmds=['helm', 'install', 'instapro-data-loader', '~/instapro/charts/instapro-data-loader/instapro-data-loader-0.1.0.tgz'],
+        cmds=['helm', 'install', 'instapro-data-loader', '/Users/kohinoorbiswas/instapro/charts/instapro-data-loader/instapro-data-loader-0.1.0.tgz'],
         dag=dag,
     )
 
@@ -28,7 +28,7 @@ with DAG(
         task_id='execute_helm_chart2',
         namespace='airflow',  # Specify the namespace as "airflow"
         image='helm:latest',
-        cmds=['helm', 'install', 'instapro-data-modeller', '~/instapro/charts/instapro-data-modeller/instapro-data-modeller-0.1.0.tgz'],
+        cmds=['helm', 'install', 'instapro-data-modeller', '/Users/kohinoorbiswas/instapro/charts/instapro-data-modeller/instapro-data-modeller-0.1.0.tgz'],
         dag=dag,
     )
 
@@ -37,7 +37,7 @@ with DAG(
         task_id='execute_helm_chart3',
         namespace='airflow',  # Specify the namespace as "airflow"
         image='helm:latest',
-        cmds=['helm', 'install', 'instapro-data-tranformer', '~/instapro/charts/instapro-data-transformer/instapro-data-transformer-0.1.0.tgz'],
+        cmds=['helm', 'install', 'instapro-data-tranformer', '/Users/kohinoorbiswas/instapro/charts/instapro-data-transformer/instapro-data-transformer-0.1.0.tgz'],
         dag=dag,
     )
 
