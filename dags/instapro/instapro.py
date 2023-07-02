@@ -1,6 +1,8 @@
 from datetime import datetime
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.python import PythonOperator
+from airflow.operators.dummy_operator import DummyOperator
 
 default_args = {
     "owner": "Kohinoor Biswas",
@@ -32,22 +34,38 @@ images = [
     },
 ]
 
-prev_task = None
-for i, image in enumerate(images, 1):
-    task = KubernetesPodOperator(
-        task_id=f"run_docker_{i}",
-        name=f"run-docker-pod-{i}",
-        namespace="airflow",
-        image=image["image"],
-        image_pull_policy="IfNotPresent",
-        cmds=image["command"],
-        get_logs=True,
-        is_delete_operator_pod=True,
-        dag=dag,
-    )
+def print_logs(**context):
+    logs = context["ti"].xcom_pull(task_ids=context["task"].task_id, key="logs")
+    for task_logs in logs:
+        print(task_logs)
 
-    if prev_task:
-        task.set_upstream(prev_task)
-    prev_task = task
+with dag:
+    start_task = DummyOperator(task_id="start_task")
 
-task
+    prev_task = start_task
+    for i, image in enumerate(images, 1):
+        task_id = f"run_docker_{i}"
+        task = KubernetesPodOperator(
+            task_id=task_id,
+            name=f"run-docker-pod-{i}",
+            namespace="airflow",
+            image=image["image"],
+            image_pull_policy="IfNotPresent",
+            cmds=image["command"],
+            get_logs=True,
+            is_delete_operator_pod=True,
+        )
+
+        task_logs = PythonOperator(
+            task_id=f"print_logs_{i}",
+            python_callable=print_logs,
+            provide_context=True,
+        )
+
+        prev_task >> task >> task_logs
+        prev_task = task_logs
+
+        task_logs.xcom_push(key="logs", value=[task.task_id])
+
+    end_task = DummyOperator(task_id="end_task")
+    prev_task >> end_task
