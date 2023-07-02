@@ -1,0 +1,24 @@
+postgresql:
+  host: 192.168.49.2
+  port: 5432
+  database: instapro
+  username: postgres
+  password: postgres
+
+service:
+  port: 16443
+  type: LoadBalancer
+
+serviceAccount:
+  create: true
+  name: instapro-data-transformer
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+
+image:
+  repository: docker.io/kohinoorthinks/instapro-data-transformer
+  tag: latest
