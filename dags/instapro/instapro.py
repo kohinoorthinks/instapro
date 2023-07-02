@@ -1,6 +1,7 @@
 from datetime import datetime
 from airflow.operators.empty import EmptyOperator
 from airflow import DAG
+from airflow.providers.cncf.kubernetes.operators.kubernetes import KubernetesPodOperator
 import yaml
 
 def get_chart_path(chart_name):
