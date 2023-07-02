@@ -34,8 +34,8 @@ images = [
     },
 ]
 
-def print_logs(**context):
-    logs = context["ti"].xcom_pull(task_ids=context["task"].task_id, key="logs")
+def print_logs(task_instance, **kwargs):
+    logs = task_instance.xcom_pull(task_ids=kwargs["task"].task_id, key="logs")
     for task_logs in logs:
         print(task_logs)
 
@@ -59,6 +59,7 @@ with dag:
         task_logs = PythonOperator(
             task_id=f"print_logs_{i}",
             python_callable=print_logs,
+            op_args=[task_id],
             provide_context=True,
         )
 
