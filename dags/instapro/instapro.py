@@ -10,9 +10,9 @@ default_args = {
     "email_on_retry": False,
 }
 
-def log_operator_result(task_instance, **kwargs):
+def log_operator_result(ti, **kwargs):
     logger = logging.getLogger(__name__)
-    logger.info("Task '%s' finished with result: %s", task_instance.task_id, task_instance.xcom_pull(task_ids=task_instance.task_id))
+    logger.info("Task '%s' finished with result: %s", ti.task_id, ti.xcom_pull(task_ids=ti.task_id))
 
 with DAG(
     dag_id="instapro",
