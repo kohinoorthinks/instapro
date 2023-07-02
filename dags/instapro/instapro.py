@@ -38,7 +38,6 @@ with DAG(
             name='airflow-install-docker',
             in_cluster=False,
             cluster_context='kubectl',
-            config_file='/Users/kohinoorbiswas/.kube/config',
             is_delete_operator_pod=True,
             get_logs=True,
             dag=dag,
