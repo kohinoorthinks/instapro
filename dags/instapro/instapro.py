@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 
 default_args = {
     "owner": "Kohinoor Biswas",
@@ -21,17 +21,26 @@ with DAG(
     schedule_interval="@daily",
     catchup=False,
 ) as dag:
-    helm_charts = [
-        "instapro-data-loader",
-        "instapro-data-modeller",
-        "instapro-data-transformer",
+    docker_images = [
+        "username/my-image1:latest",
+        "username/my-image2:latest",
+        "username/my-image3:latest",
     ]
 
-    for i, chart in enumerate(helm_charts, 1):
-        command = f"helm install {chart} /Users/kohinoorbiswas/instapro/charts/{chart}/{chart}-0.1.0.tgz"
-        task = BashOperator(
-            task_id=f"execute_helm_chart{i}",
-            bash_command=command,
+    for i, image in enumerate(docker_images, 1):
+        task_id = f"install_docker_image{i}"
+        command = f"docker pull {image}"
+        task = KubernetesPodOperator(
+            task_id=task_id,
+            namespace='default',
+            image='docker',
+            cmds=['docker', 'pull', image],
+            name='airflow-install-docker',
+            in_cluster=False,
+            cluster_context='microk8s',
+            config_file='/usr/local/airflow/include/.kube/config',
+            is_delete_operator_pod=True,
+            get_logs=True,
             dag=dag,
         )
 
