@@ -42,6 +42,7 @@ for i, image in enumerate(images, 1):
         image_pull_policy="IfNotPresent",
         cmds=image["command"],
         get_logs=True,
+        is_delete_operator_pod=False,
         dag=dag,
     )
 
