@@ -20,15 +20,15 @@ dag = DAG(
 images = [
     {
         "image": "kohinoorthinks/instapro-data-loader:latest",
-        "command": ["echo", "Running Docker image 1"],
+        "command": ["echo", "Running instapro-data-loader"],
     },
     {
         "image": "kohinoorthinks/instapro-data-modeller:latest",
-        "command": ["echo", "Running Docker image 2"],
+        "command": ["echo", "Running instapro-data-modeller"],
     },
     {
         "image": "kohinoorthinks/instapro-data-transformer:latest",
-        "command": ["echo", "Running Docker image 3"],
+        "command": ["echo", "Running instapro-data-transformer"],
     },
 ]
 
@@ -42,7 +42,7 @@ for i, image in enumerate(images, 1):
         image_pull_policy="IfNotPresent",
         cmds=image["command"],
         get_logs=True,
-        is_delete_operator_pod=False,
+        is_delete_operator_pod=True,
         dag=dag,
     )
 
