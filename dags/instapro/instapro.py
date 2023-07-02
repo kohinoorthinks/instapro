@@ -38,15 +38,13 @@ with DAG(
             name='airflow-install-docker',
             in_cluster=False,
             cluster_context='kubectl',
-            config_file='/usr/local/airflow/include/.kube/config',
+            config_file='/Users/kohinoorbiswas/.kube/config',
             is_delete_operator_pod=True,
             get_logs=True,
             dag=dag,
         )
 
-        # Add the logging callback to the task
-        task.on_success_callback = log_operator_result
-        task.on_failure_callback = log_operator_result
+        
 
         if i > 1:
             task.set_upstream(prev_task)
