@@ -1,7 +1,6 @@
 from datetime import datetime
-import logging
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.operators.bash import BashOperator
 
 default_args = {
     "owner": "Kohinoor Biswas",
@@ -10,41 +9,34 @@ default_args = {
     "email_on_retry": False,
 }
 
-def log_operator_result(ti, **kwargs):
-    logger = logging.getLogger(__name__)
-    logger.info("Task '%s' finished with result: %s", ti.task_id, ti.xcom_pull(task_ids=ti.task_id))
-
-with DAG(
-    dag_id="instapro",
+dag = DAG(
+    dag_id="download_helm_chart",
     default_args=default_args,
     start_date=datetime(2021, 1, 1, 0, 0),
     schedule_interval="@daily",
     catchup=False,
-) as dag:
-    docker_images = [
-        "kohinoorthinks/instapro-data-loader:latest",
-        "kohinoorthinks/instapro-data-modeller:latest",
-        "kohinoorthinks/instapro-data-transformer:latest",
-    ]
+)
 
-    for i, image in enumerate(docker_images, 1):
-        task_id = f"install_docker_image{i}"
-        command = f"docker pull {image}"
-        task = KubernetesPodOperator(
-            task_id=task_id,
-            namespace='default',
-            image='docker',
-            cmds=['docker', 'pull', image],
-            name='airflow-install-docker',
-            in_cluster=False,
-            cluster_context='kubectl',
-            is_delete_operator_pod=True,
-            get_logs=True,
-            dag=dag,
-        )
+# Command to download Helm chart from GitHub and add it to the local repository
+download_command = """
+mkdir -p ~/instapro_charts
+cd ~/instapro_charts
+git clone https://github.com/kohinoorthinks/instapro.git
+cd instapro/charts/instapro-data-loader
+helm repo index .
+cd ~/instapro_charts/instapro-data-modeller
+helm repo index .
+cd ~/instapro_charts/instapro-data-tarnsformer/instapro-data-tarnsformer
+helm repo index .
+"""
 
-        
+# Task to download and add Helm chart to local repository
+download_task = BashOperator(
+    task_id="download_chart",
+    bash_command=download_command,
+    dag=dag,
+)
 
-        if i > 1:
-            task.set_upstream(prev_task)
-        prev_task = task
+# Set the task dependencies
+download_task
+
