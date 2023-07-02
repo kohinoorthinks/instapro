@@ -1,0 +1,14 @@
+charts:
+  chart1:
+    path: /~/instapro/charts/instapro-data-loader/instapro-data-loader-0.1.0.tgz
+    version: 0.1.0
+    
+
+  chart2:
+    path: /~/instapro/charts/instapro-data-modeller/instapro-data-modeller-0.1.0.tgz
+    version: 0.1.0
+    
+
+  chart3:
+    path: /~/instapro/charts/instapro-data-transformer/instapro-data-transformer-0.1.0.tgz
+    version: 0.1.0
