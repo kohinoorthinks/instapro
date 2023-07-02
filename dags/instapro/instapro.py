@@ -1,6 +1,6 @@
 from datetime import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 
 default_args = {
     "owner": "Kohinoor Biswas",
@@ -10,30 +10,43 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id="download_helm_chart",
+    dag_id="instapro-etl",
     default_args=default_args,
-    start_date=datetime(2021, 1, 1, 0, 0),
+    start_date=datetime(2023, 1, 1),
     schedule_interval="@daily",
     catchup=False,
 )
 
-# Command to download Helm chart from GitHub and add it to the local repository
-download_command = """
-cd /Users/kohinoorbiswas/repo/instapro/charts/instapro-data-loader
-/opt/homebrew/bin/helm repo index .
-cd /Users/kohinoorbiswas/repo/instapro/charts/instapro-data-modeller
-/opt/homebrew/bin/helm repo index .
-cd /Users/kohinoorbiswas/repo/instapro/charts/instapro-data-tarnsformer/instapro-data-tarnsformer
-/opt/homebrew/bin/helm repo index .
-"""
+images = [
+    {
+        "image": "kohinoorthinks/instapro-data-loader:latest",
+        "command": ["echo", "Running Docker image 1"],
+    },
+    {
+        "image": "kohinoorthinks/instapro-data-modeller:latest",
+        "command": ["echo", "Running Docker image 2"],
+    },
+    {
+        "image": "kohinoorthinks/instapro-data-transformer:latest",
+        "command": ["echo", "Running Docker image 3"],
+    },
+]
 
-# Task to download and add Helm chart to local repository
-download_task = BashOperator(
-    task_id="download_chart",
-    bash_command=download_command,
-    dag=dag,
-)
+tasks = []
+for i, image in enumerate(images, 1):
+    task = KubernetesPodOperator(
+        task_id=f"run_docker_{i}",
+        name=f"run-docker-pod-{i}",
+        namespace="airflow",
+        image=image["image"],
+        image_pull_policy="IfNotPresent",
+        cmds=image["command"],
+        dag=dag,
+    )
+    tasks.append(task)
 
 # Set the task dependencies
-download_task
+for i in range(1, len(tasks)):
+    tasks[i].set_upstream(tasks[i-1])
 
+tasks
