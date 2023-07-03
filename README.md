@@ -18,23 +18,53 @@ For the given tasks, I recommend using PostgreSQL as the relational database. He
 
 Considering these factors, PostgreSQL is a great choice for building a data pipeline that requires scalability, performance, and community support. Its advanced features, reliability, and compatibility make it well-suited for handling large datasets and enabling efficient querying.
 
-# Design a data pipeline that includes the following steps:
-## a.	Data Ingestion
-## i.	Load the dataset into the database
-## ii.	You can choose to create a Python script to do some initial transformations before loading it
-## iii.	Document the deployment process and any configurations needed for data ingestion.
-# Data Transformation and Modeling
-## i.	Transform the data in the database using SQL/dbt/Python
-## ii.	Apply Dimensional Modeling principles to design the schema, including fact and dimension tables.
-### iii.	Define appropriate indexes, primary keys, and foreign key relationships to enhance query performance.
-## c.	Orchestration
-### i.	Use Airflow to create DAGs that would orchestrate the workflows
-### ii.	For the deployment, you can create your own Helm chart or use the official Helm chart and deploy it on a local Kubernetes cluster (microk8s, minikube, etc)
-### iii.	Write YAML files for the Helm chart values and environment variables required for the data pipeline orchestration process.
+# Data Pipeline Design
+
+This document outlines the design of a data pipeline that includes data ingestion, data transformation and modeling, and orchestration steps.
+
+## Data Ingestion
+
+The data ingestion process involves loading the dataset into the database. It can include initial transformations using a Python script before loading. Here are the steps involved:
+
+1. **Data Loading**: Load the dataset into the database. Specify the necessary configuration settings such as the database connection details, target schema, and table.
+
+2. **Initial Transformations**: If required, create a Python script to perform initial transformations on the data before loading it into the database. This script can handle tasks such as data cleansing, formatting, or filtering.
+
+3. **Deployment Process**: Document the deployment process for the data ingestion pipeline. Specify the necessary configurations, such as the database credentials, dataset location, and any additional dependencies or tools required.
+
+## Data Transformation and Modeling
+
+The data transformation and modeling step involves transforming the data in the database using SQL, dbt, or Python. It also includes applying Dimensional Modeling principles to design the schema, including fact and dimension tables. Here are the steps involved:
+
+1. **Data Transformation**: Use SQL, dbt (data build tool), or Python scripts to perform data transformations in the database. These transformations can include aggregations, calculations, data joins, or any other required operations.
+
+2. **Dimensional Modeling**: Apply Dimensional Modeling principles to design the schema. This involves identifying fact and dimension tables, defining relationships between them, and establishing appropriate indexes, primary keys, and foreign key relationships.
+
+3. **Optimizations**: Optimize the database schema and query performance by defining indexes, primary keys, and foreign key relationships. These optimizations can enhance the efficiency and speed of data retrieval and analysis.
+
+## Orchestration
+
+The orchestration step involves using Airflow to create DAGs (Directed Acyclic Graphs) that orchestrate the workflows of the data pipeline. For deployment, you can create a custom Helm chart or use the official Helm chart to deploy the pipeline on a local Kubernetes cluster (e.g., microk8s, minikube). Here are the steps involved:
+
+1. **Airflow DAGs**: Use Airflow to create DAGs that define the workflow of the data pipeline. These DAGs should specify the sequence of tasks, dependencies between them, and any required parameters or configurations.
+
+2. **Deployment with Helm**: For deployment, you can create your own Helm chart or use the official Helm chart. Helm is a package manager for Kubernetes that simplifies the deployment process. Document the deployment process using Helm, including any necessary configurations, such as the number of replicas, resource limits, and persistent storage requirements.
+
+3. **Helm Chart Values**: Write YAML files for the Helm chart values. These files specify the configuration settings for the data pipeline deployment, such as database connection details, credentials, environment variables, and any other necessary parameters.
+
+## Deployment Process
+
+The deployment process involves setting up the data pipeline and any necessary configurations or optimizations. Here are the steps involved:
+
+1. **Data Ingestion**: Follow the documented deployment process for data ingestion, including the necessary configurations and optimizations.
+
+2. **Data Transformation and Modeling**: Execute the data transformation and modeling steps, using the specified tools and following the documented deployment process. Apply any optimizations to enhance query performance.
+
+3. **Orchestration**: Deploy the data pipeline using Airflow and Helm. Follow the documented deployment process for setting up Airflow DAGs and Helm chart values. Ensure all necessary configurations and environment variables are correctly defined.
 
 
 The solution uses an ELT approach to load CSV file into database , models the data , and then creates transformed availability snapshot for the data.
-### Disclaimier :  
+### Disclaimer/Credits :  
 The airflow set up is using solution by Guido Kosloff Gancedo available at (https://github.com/guidok91/airflow)
 
 ### Deployemnt
