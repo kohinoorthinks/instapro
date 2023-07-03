@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instapro-data-transformer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: instapro-data-transformer
+  template:
+    metadata:
+      labels:
+        app: instapro-data-transformer
+    spec:
+      containers:
+      - name: instapro-data-transformer
+        image: instapro-data-transformer  # Replace with your actual Docker image tag
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+        env:
+          - name: DB_HOST
+            value: 10.109.231.33
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_NAME
+            value: instapro
+          - name: DB_USER
+            value: postgres
+          - name: DB_PASSWORD
+            value: postgres
+        volumeMounts:
+          - name: data-volume
+            mountPath: /app/data
+      volumes:
+        - name: data-volume
+          configMap:
+            name: data-config
+            items:
+              - key: event_log.csv
+                path: event_log.csv
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: instapro-data-transformer
+spec:
+  selector:
+    app: instapro-data-transformer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

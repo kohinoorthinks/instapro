@@ -1,0 +1,6 @@
+postgresql:
+  host: airflow-postgresql
+  port: 5432
+  database: postgres
+  username: postgres
+  postgresPassword: postgres
