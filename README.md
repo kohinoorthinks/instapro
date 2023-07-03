@@ -112,7 +112,7 @@ DAGs are deployed via GitSync.
 GitSync acts as a side car container alongside the other Airflow pods, synchronising the `dags/` folder in the pods with the DAGs located in a Git repo of your choice (in this case https://github.com/kohinoorthinks/instapro.git).
 
 #### ELT image configuration
-While no changes will be needed if airflow with postgres is configured as mnetioned above, cutome db creds can be configured for respective docker images.
+While no changes will be needed if airflow with postgres is configured as mentioned above, cutom db credentials can be configured for respective docker images.
 From airflow directory
 - `cd ..`
 - `cd data_loader`
