@@ -112,7 +112,7 @@ build docker image, images are built for apple silicon, so if running on differe
 
 execute / manually trigger dag : instapro-etl
 
-Once Dag Completes executiom 
+Once Dag Completes execution
 - Login to pg admin : `http://localhost:9090`
 - username: admin@admin.com
 - password: mypwd
@@ -175,10 +175,61 @@ Sample output is available at
 project_root/output/availability_snapshot.csv
 
 #### Question 4
-### Design a CI/CD pipeline in Github/Gitlab in YAML, make sure it does the following:
+#### Design a CI/CD pipeline in Github/Gitlab in YAML, make sure it does the following:
 -	Runs the test suite for unit, integration, and end-to-end tests
 -	Builds the tables of the data model and make sure that the schema and data tests pass
 -	Cleanup of resources once CI/CD pipeline finished running
+
+The CI/CD pipeline can be found at:
+- project_root/.github/workflows/ci-cd.yml
+#### CI/CD Pipeline Configuration
+
+This CI/CD pipeline is designed to automate the build, testing, and deployment processes for the project. It consists of three jobs: `build-and-test`, `build-database`, and `cleanup`.
+
+#### Build and Test
+
+The `build-and-test` job is responsible for building and testing the application. Here are the steps involved:
+
+1. **Checkout Repository**: This step checks out the source code repository.
+
+2. **Set Up Python**: This step sets up the Python environment using the specified version.
+
+3. **Install Dependencies**: This step installs the project dependencies specified in the `requirements.txt` file.
+
+4. **Run Unit Tests**: This step runs the unit tests for the application.
+
+5. **Run Integration Tests**: You can add commands in this step to run integration tests.
+
+6. **Run End-to-End Tests**: You can add commands in this step to run end-to-end tests.
+
+## Build Database
+
+The `build-database` job handles tasks related to the database. Here are the steps involved:
+
+1. **Checkout Repository**: This step checks out the source code repository.
+
+2. **Set Up Python**: This step sets up the Python environment using the specified version.
+
+3. **Install Dependencies**: This step installs the project dependencies specified in the `requirements.txt` file.
+
+4. **Apply Database Migrations**: This step applies any pending database migrations using Django's migration framework.
+
+5. **Run Schema and Data Tests**: You need to add commands in this step to run tests that validate the database schema and data integrity.
+
+#### Cleanup
+
+The `cleanup` job performs necessary cleanup tasks after the build and database jobs. Here are the steps involved:
+
+1. **Checkout Repository**: This step checks out the source code repository.
+
+2. **Clean Up Resources**: Add commands in this step to clean up any temporary or test resources created during the CI/CD process.
+
+#### Workflow
+
+The pipeline is triggered on each push to the `main` branch. The jobs are executed sequentially: `build-and-test` -> `build-database` -> `cleanup`. The `cleanup` job depends on the completion of the previous two jobs.
+
+
+
 
 
 
