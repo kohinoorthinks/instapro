@@ -67,7 +67,7 @@ The solution uses an ELT approach to load CSV file into database , models the da
 ### Disclaimer/Credits :  
 The airflow set up is using solution by Guido Kosloff Gancedo available at (https://github.com/guidok91/airflow)
 
-### Deployemnt
+# Deployment
 ## Requirements
 [Kind](https://kind.sigs.k8s.io/), [Docker](https://www.docker.com/) and [Helm](https://helm.sh/) for local Kubernetes cluster.
 
@@ -150,6 +150,15 @@ Once Dag Completes execution
 In postgres db there should be schema: instapro
 Verify output:
 `select * from instapro.availability_snapshot`
+
+#### helm charts (optioal)
+- helm charts for the etl ptocess can also be installed if not executing the dag
+- `cd project_root/charts/instapro-data-loader`
+- `helm install instapro-data-loader ./instapro-data-loader-0.1.0.tgz -n airflow`
+- `cd project_root/charts/instapro-data-modeller`
+- `helm install instapro-data-modeller ./instapro-data-modeller-0.1.0.tgz -n airflow`
+- `cd project_root/charts/instapro-data-transformer`
+- `helm install instapro-data-transformer ./instapro-data-transformer-0.1.0.tgz -n airflow`
 
 ## Data Model
 
